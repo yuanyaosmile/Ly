@@ -1,0 +1,33 @@
+server:
+  port: 9998
+spring:
+  application:
+    name: ly-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:9999/eureka
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillseconds: 5000 #熔断超时时长
+
+ribbon:
+  ConnectionTimeout: 250 # ribbon连接超时是250ms
+  ReadTimeout: 2000 #通信超时是2000ms
+  MaxAutoRetries: 1 #同一服务不同实例得到重试次数
+  MaxAutoRetriesNextServer: 1 #同一实例的重试次数
+
+zuul:
+  prefix: /api
+  retryable: true
+  routes:
+    item-service: /item/**
+    upload-service:
+      path: /upload/**
+      serviceId: upload-service
+      stripe-prefix: false
